@@ -1,0 +1,125 @@
+public class CoffeeShop {
+    private String name;
+    private MenuItem[] menu;
+    private String[] orders;
+    public CoffeeShop(String name, MenuItem[] menu) {
+        this.name = name;
+        this.menu = menu;
+        this.orders = new String[0];
+    }
+    public String addOrder(String itemName) {
+        for (MenuItem item : menu) {
+            if (item.getName().equals(itemName)) {
+                String[] newOrders = new String[orders.length + 1];
+                System.arraycopy(orders, 0, newOrders, 0, orders.length);
+                newOrders[orders.length] = itemName;
+                orders = newOrders;
+                return "Order added!";
+            }
+        }
+        return "This item is currently unavailable!";
+    }
+    public String fulfillOrder() {
+        if (orders.length > 0) {
+            String item = orders[0];
+            String[] newOrders = new String[orders.length - 1];
+            System.arraycopy(orders, 1, newOrders, 0, orders.length - 1);
+            orders = newOrders;
+            return "The " + item + " is ready!";
+        } else {
+            return "All orders have been fulfilled!";
+        }
+    }
+    public String[] listOrders() {
+        return orders;
+    }
+    public double dueAmount() {
+        double total = 0;
+        for (String item : orders) {
+            for (MenuItem menuItem : menu) {
+                if (menuItem.getName().equals(item)) {
+                    total += menuItem.getPrice();
+                    break;
+                }
+            }
+        }
+        return total;
+    }
+    public String cheapestItem() {
+        double cheapestPrice = Double.MAX_VALUE;
+        String cheapestItem = "";
+        for (MenuItem item : menu) {
+            if (item.getPrice() < cheapestPrice) {
+                cheapestPrice = item.getPrice();
+                cheapestItem = item.getName();
+            }
+        }
+        return cheapestItem;
+    }
+
+    public String[] drinksOnly() {
+        ArrayList<String> drinks = new ArrayList<>();
+        for (MenuItem item : menu) {
+            if (item.getType().equals("drink")) {
+                drinks.add(item.getName());
+            }
+        }
+        return drinks.toArray(new String[0]);
+    }
+    public String[] foodOnly() {
+        ArrayList<String> food = new ArrayList<>();
+        for (MenuItem item : menu) {
+            if (item.getType().equals("food")) {
+                food.add(item.getName());
+            }
+        }
+        return food.toArray(new String[0]);
+    }
+}
+class MenuItem {
+    private String name;
+    private String type;
+    private double price;
+
+    public MenuItem(String name, String type, double price) {
+        this.name = name;
+        this.type = type;
+        this.price = price;
+    }
+    public String getName() {
+        return name;
+    }
+    public String getType() {
+        return type;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        MenuItem[] menu = {
+                new MenuItem("tuna sandwich", "food", 2.44),
+                new MenuItem("ham and cheese sandwich", "food", 1.99),
+                new MenuItem("orange juice", "drink", 3.99),
+                new MenuItem("lemonade", "drink", 0.51),
+                new MenuItem("cranberry juice", "drink", 2.90)
+        };
+        CoffeeShop tcs = new CoffeeShop("Tesha's Coffee Shop", menu);
+        System.out.println(tcs.addOrder("hot cocoa")); 
+        System.out.println(tcs.addOrder("iced tea")); 
+        System.out.println(tcs.addOrder("cinnamon roll")); 
+        System.out.println(tcs.addOrder("iced coffee")); 
+        System.out.println(Arrays.toString(tcs.listOrders())); 
+        System.out.println(tcs.dueAmount());
+        System.out.println(tcs.fulfillOrder()); 
+        System.out.println(tcs.fulfillOrder()); 
+        System.out.println(tcs.fulfillOrder()); 
+        System.out.println(Arrays.toString(tcs.listOrders())); 
+        System.out.println(tcs.dueAmount());
+        System.out.println(tcs.cheapestItem()); 
+        System.out.println(Arrays.toString(tcs.drinksOnly())); 
+        System.out.println(Arrays.toString(tcs.foodOnly()));
+    }
+}
